@@ -353,7 +353,13 @@ typedef struct drawseg_s
 // Patches are used for sprites and all masked pictures,
 // and we compose textures from the TEXTURE1/2 lists
 // of patches.
-typedef struct 
+
+#ifdef __GNUC__
+#define PACKED_ATTR __attribute__((packed))
+#else
+#define PACKED_ATTR
+#endif
+typedef struct PACKED_ATTR
 { 
     short		width;		// bounding box size 
     short		height; 

@@ -32,7 +32,14 @@
 //
 // TYPES
 //
-typedef struct
+
+#ifdef __GNUC__
+#define PACKED_ATTR __attribute__((packed))
+#else
+#define PACKED_ATTR
+#endif
+
+typedef struct PACKED_ATTR
 {
     // Should be "IWAD" or "PWAD".
     char		identification[4];		
@@ -42,7 +49,7 @@ typedef struct
 } wadinfo_t;
 
 
-typedef struct
+typedef struct PACKED_ATTR
 {
     int			filepos;
     int			size;

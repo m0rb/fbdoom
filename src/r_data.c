@@ -48,6 +48,12 @@ rcsid[] = "$Id: r_data.c,v 1.4 1997/02/03 16:47:55 b1 Exp $";
 
 #include "r_data.h"
 
+#ifdef __GNUC__
+#define PACKED_STRUCT(x) x __attribute__((packed))
+#else
+#define PACKED_STRUCT(x) x
+#endif
+
 //
 // Graphics.
 // DOOM graphics for walls and sprites
@@ -66,14 +72,14 @@ rcsid[] = "$Id: r_data.c,v 1.4 1997/02/03 16:47:55 b1 Exp $";
 // into the rectangular texture space using origin
 // and possibly other attributes.
 //
-typedef struct
+typedef PACKED_STRUCT( struct
 {
     short	originx;
     short	originy;
     short	patch;
     short	stepdir;
     short	colormap;
-} mappatch_t;
+}) mappatch_t;
 
 
 //
@@ -81,23 +87,22 @@ typedef struct
 // A DOOM wall texture is a list of patches
 // which are to be combined in a predefined order.
 //
-typedef struct
+typedef PACKED_STRUCT( struct
 {
     char		name[8];
-    boolean		masked;	
+    int			masked;		// 4 bytes in WAD (not boolean!)
     short		width;
     short		height;
-    // void		**columndirectory;	// OBSOLETE 32-but pointer ref
-    int32_t     x86CodePaddingFor64BitSystems;
+    int			columndirectory;	// 4 bytes in WAD (obsolete)
     short		patchcount;
     mappatch_t	patches[1];
-} maptexture_t;
+}) maptexture_t;
 
 
 // A single patch from a texture definition,
 //  basically a rectangular area within
 //  the texture rectangle.
-typedef struct
+typedef PACKED_STRUCT( struct
 {
     // Block origin (allways UL),
     // which has allready accounted
@@ -105,13 +110,13 @@ typedef struct
     int		originx;	
     int		originy;
     int		patch;
-} texpatch_t;
+}) texpatch_t;
 
 
 // A maptexturedef_t describes a rectangular texture,
 //  which is composed of one or more mappatch_t structures
 //  that arrange graphic patches.
-typedef struct
+typedef PACKED_STRUCT( struct
 {
     // Keep name for switch changing, etc.
     char	name[8];		
@@ -123,7 +128,7 @@ typedef struct
     short	patchcount;
     texpatch_t	patches[1];		
     
-} texture_t;
+}) texture_t;
 
 
 
